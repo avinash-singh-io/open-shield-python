@@ -8,7 +8,9 @@ from open_shield.domain.services import AuthorizationService
 @pytest.fixture
 def user_context() -> UserContext:
     return UserContext(
-        user=User(id="123", email="test@example.com", scopes=["read:users"], roles=["admin"]),
+        user=User(
+            id="123", email="test@example.com", scopes=["read:users"], roles=["admin"]
+        ),
         token=Token(raw="raw", claims={}),
         tenant=None,
     )

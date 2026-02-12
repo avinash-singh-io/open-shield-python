@@ -13,6 +13,7 @@ def get_user_context(request: Request) -> UserContext:
     if not hasattr(request.state, "user_context"):
         raise HTTPException(status_code=401, detail="Authentication required")
     from typing import cast
+
     return cast(UserContext, request.state.user_context)
 
 

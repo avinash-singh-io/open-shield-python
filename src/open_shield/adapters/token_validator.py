@@ -46,9 +46,9 @@ class PyJWTValidator(TokenValidatorPort):
                     "verify_exp": True,
                     "verify_aud": True if self.audience else False,
                     "verify_iss": True if self.issuer else False,
-                }
+                },
             )
-            
+
             return Token(raw=token_string, claims=payload)
 
         except ExpiredSignatureError as e:
@@ -66,4 +66,4 @@ class PyJWTValidator(TokenValidatorPort):
         try:
             return jwt.decode(token_string, options={"verify_signature": False})
         except PyJWTError as e:
-             raise TokenValidationError(f"Failed to decode token: {e!s}") from e
+            raise TokenValidationError(f"Failed to decode token: {e!s}") from e

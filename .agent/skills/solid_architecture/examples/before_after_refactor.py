@@ -11,10 +11,10 @@ Feature: "Save a user profile and notify them via email."
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-
 # ══════════════════════════════════════════════
 # ❌ BEFORE — SOLID VIOLATIONS
 # ══════════════════════════════════════════════
+
 
 class UserServiceBad:
     """
@@ -58,14 +58,17 @@ class UserServiceBad:
 
 # ── Domain DTOs ──────────────────────────────
 
+
 @dataclass(frozen=True)
 class UserProfile:
     """Immutable domain entity — no infrastructure knowledge."""
+
     name: str
     email: str
 
 
 # ── Abstract Ports (owned by domain) ─────────
+
 
 class UserRepository(ABC):
     """
@@ -92,6 +95,7 @@ class NotificationSender(ABC):
 
 
 # ── Domain Service ───────────────────────────
+
 
 class UserService:
     """
@@ -120,6 +124,7 @@ class UserService:
 
 
 # ── Concrete Adapters (infrastructure) ───────
+
 
 class SqliteUserRepository(UserRepository):
     """
@@ -171,6 +176,7 @@ class SmtpNotificationSender(NotificationSender):
 
 # ── Composition Root ─────────────────────────
 
+
 def create_user_service() -> UserService:
     """Wire concrete adapters — the ONLY place this happens."""
     repo = SqliteUserRepository(db_path="users.db")
@@ -179,6 +185,7 @@ def create_user_service() -> UserService:
 
 
 # ── Testing with Mocks ──────────────────────
+
 
 class FakeUserRepository(UserRepository):
     """Test double for persistence."""

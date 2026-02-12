@@ -1,7 +1,8 @@
 import pytest
-from open_shield.domain.services import AuthorizationService
-from open_shield.domain.entities import UserContext, User, Token, TenantContext
+
+from open_shield.domain.entities import Token, User, UserContext
 from open_shield.domain.exceptions import AuthorizationError
+from open_shield.domain.services import AuthorizationService
 
 
 @pytest.fixture
@@ -9,7 +10,7 @@ def user_context():
     return UserContext(
         user=User(id="123", scopes=["read:users"], roles=["admin"]),
         token=Token(raw="raw", claims={}),
-        tenant=None
+        tenant=None,
     )
 
 

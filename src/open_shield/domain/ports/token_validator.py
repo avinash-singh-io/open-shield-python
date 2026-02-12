@@ -11,13 +11,13 @@ class TokenValidatorPort(ABC):
     def validate_token(self, token_string: str) -> Token:
         """
         Parse and validate a raw JWT string.
-        
+
         Args:
             token_string: The raw JWT string.
-            
+
         Returns:
             A validated Token entity.
-            
+
         Raises:
             TokenValidationError: If validation fails (expired, invalid signature, etc).
         """
@@ -27,10 +27,10 @@ class TokenValidatorPort(ABC):
     def decode_unverified(self, token_string: str) -> dict[str, Any]:
         """
         Decode the token without verification (useful for inspecting headers/claims pre-validation).
-        
+
         Args:
             token_string: The raw JWT string.
-            
+
         Returns:
             The decoded claims dictionary.
         """

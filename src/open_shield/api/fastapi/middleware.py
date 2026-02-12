@@ -1,4 +1,3 @@
-
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.types import ASGIApp
@@ -12,7 +11,7 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
     """
     Middleware that intercepts requests, validates the Authorization header,
     and attaches the UserContext to the request state.
-    
+
     Attributes:
         app: The ASGI application.
         token_service: The domain service for validation.
@@ -21,10 +20,10 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
     """
 
     def __init__(
-        self, 
-        app: ASGIApp, 
+        self,
+        app: ASGIApp,
         config: OpenShieldConfig,
-        exclude_paths: set[str] | None = None
+        exclude_paths: set[str] | None = None,
     ):
         super().__init__(app)
         self.config = config
@@ -55,24 +54,24 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
 
         auth_header = request.headers.get("Authorization")
         if not auth_header:
-             # Basic check, detailed handling usually done by dependency or explicit 401
-             # If we want global enforcement, strictly 401 here.
-             # Return 401.
-             return Response("Missing Authorization Header", status_code=401)
+            # Basic check, detailed handling usually done by dependency or explicit 401
+            # If we want global enforcement, strictly 401 here.
+            # Return 401.
+            return Response("Missing Authorization Header", status_code=401)
 
         try:
             scheme, token = auth_header.split()
             if scheme.lower() != "bearer":
                 return Response("Invalid Authorization Scheme", status_code=401)
-                
+
             user_context = self.token_service.validate_and_extract(token)
-            
+
             # Attach to request.state for downstream access
             request.state.user_context = user_context
-            
+
             # Enforce global require_scopes/roles if configured?
             # Usually better handled in route dependencies.
-            
+
         except (ValueError, TokenValidationError) as e:
             return Response(f"Unauthorized: {e!s}", status_code=401)
         except OpenShieldError as e:

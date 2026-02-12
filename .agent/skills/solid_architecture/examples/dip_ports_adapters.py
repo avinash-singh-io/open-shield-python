@@ -16,14 +16,15 @@ Key Concepts:
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-
 # ─────────────────────────────────────────────
 # 1. Domain Layer — Pure business logic + DTOs
 # ─────────────────────────────────────────────
 
+
 @dataclass(frozen=True)
 class Notification:
     """Domain DTO — no framework or infra dependencies."""
+
     recipient: str
     subject: str
     body: str
@@ -72,6 +73,7 @@ class NotificationService:
 # 2. Adapter Layer — Concrete implementations
 # ─────────────────────────────────────────────
 
+
 class EmailAdapter(NotificationPort):
     """
     Concrete Adapter — sends notifications via email.
@@ -107,16 +109,14 @@ class SmsAdapter(NotificationPort):
         self._api_key = api_key
 
     def send(self, notification: Notification) -> bool:
-        print(
-            f"[SMS] To: {notification.recipient} | "
-            f"Message: {notification.body}"
-        )
+        print(f"[SMS] To: {notification.recipient} | Message: {notification.body}")
         return True
 
 
 # ─────────────────────────────────────────────
 # 3. Composition Root — Wiring (entry point)
 # ─────────────────────────────────────────────
+
 
 def create_notification_service(channel: str = "email") -> NotificationService:
     """
@@ -141,6 +141,7 @@ def create_notification_service(channel: str = "email") -> NotificationService:
 # ─────────────────────────────────────────────
 # 4. Testing — Mock adapter for unit tests
 # ─────────────────────────────────────────────
+
 
 class MockNotificationPort(NotificationPort):
     """

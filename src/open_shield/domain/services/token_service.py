@@ -29,11 +29,7 @@ class TokenService:
         user = self._extract_user(token)
         tenant = self._extract_tenant(token)
 
-        return UserContext(
-            user=user,
-            token=token,
-            tenant=tenant
-        )
+        return UserContext(user=user, token=token, tenant=tenant)
 
     def _extract_user(self, token: Token) -> User:
         """Extract user identity and permissions from the token."""
@@ -47,17 +43,23 @@ class TokenService:
         # Standard claim for roles in Keycloak/Auth0 varies.
         # We look for 'roles', 'realm_access.roles', or 'permissions'.
         roles = token.claims.get("roles", [])
-        if "realm_access" in token.claims and isinstance(token.claims["realm_access"], dict):
+        if "realm_access" in token.claims and isinstance(
+            token.claims["realm_access"], dict
+        ):
             roles.extend(token.claims["realm_access"].get("roles", []))
-            
-        scopes = token.claims.get("scope", "").split() if isinstance(token.claims.get("scope"), str) else []
-        
+
+        scopes = (
+            token.claims.get("scope", "").split()
+            if isinstance(token.claims.get("scope"), str)
+            else []
+        )
+
         return User(
             id=sub,
             email=email,
             roles=list(set(roles)),  # Deduplicate
             scopes=scopes,
-            metadata=token.claims
+            metadata=token.claims,
         )
 
     def _extract_tenant(self, token: Token) -> TenantContext | None:
@@ -69,9 +71,13 @@ class TokenService:
         """
         # Simple default strategy: look for specific claims
         # TODO: Make tenant extraction strategy configurable
-        tid = token.claims.get("tid") or token.claims.get("org_id") or token.claims.get("tenant_id")
-        
+        tid = (
+            token.claims.get("tid")
+            or token.claims.get("org_id")
+            or token.claims.get("tenant_id")
+        )
+
         if tid:
             return TenantContext(tenant_id=tid, metadata={})
-        
+
         return None

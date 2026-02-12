@@ -1,4 +1,3 @@
-
 from fastapi import Depends, HTTPException, Request
 
 from open_shield.domain.entities import UserContext
@@ -18,6 +17,7 @@ def get_user_context(request: Request) -> UserContext:
 
 class RequireScope:
     """Dependency that enforces a required scope."""
+
     def __init__(self, scope: str):
         self.scope = scope
         self.auth_service = AuthorizationService()
@@ -26,12 +26,13 @@ class RequireScope:
         try:
             self.auth_service.require_scope(context, self.scope)
         except AuthorizationError as e:
-             raise HTTPException(status_code=403, detail=str(e)) from e
+            raise HTTPException(status_code=403, detail=str(e)) from e
         return context
 
 
 class RequireRole:
     """Dependency that enforces one of the required roles."""
+
     def __init__(self, roles: list[str]):
         self.roles = roles
         self.auth_service = AuthorizationService()
@@ -40,5 +41,5 @@ class RequireRole:
         try:
             self.auth_service.require_any_role(context, self.roles)
         except AuthorizationError as e:
-             raise HTTPException(status_code=403, detail=str(e)) from e
+            raise HTTPException(status_code=403, detail=str(e)) from e
         return context

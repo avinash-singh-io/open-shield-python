@@ -5,13 +5,14 @@ import pytest
 
 # from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
 
 from open_shield.adapters.token_validator import PyJWTValidator
 from open_shield.domain.exceptions import ExpiredTokenError
 
 
 @pytest.fixture
-def rsa_keys():
+def rsa_keys() -> tuple[RSAPrivateKey, RSAPublicKey]:
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048,
@@ -32,14 +33,14 @@ def rsa_keys():
 
 
 class MockKeyProvider:
-    def __init__(self, key):
+    def __init__(self, key: RSAPublicKey) -> None:
         self.key = key
 
-    def get_key(self, kid):
+    def get_key(self, kid: str) -> RSAPublicKey:
         return self.key
 
 
-def test_validate_valid_token(rsa_keys):
+def test_validate_valid_token(rsa_keys: tuple[RSAPrivateKey, RSAPublicKey]) -> None:
     private_key, public_key = rsa_keys
 
     payload = {
@@ -62,7 +63,7 @@ def test_validate_valid_token(rsa_keys):
     assert res.claims["sub"] == "user123"
 
 
-def test_validate_expired_token(rsa_keys):
+def test_validate_expired_token(rsa_keys: tuple[RSAPrivateKey, RSAPublicKey]) -> None:
     private_key, public_key = rsa_keys
 
     payload = {"sub": "user123", "exp": datetime.now(UTC) - timedelta(hours=1)}

@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -15,11 +16,11 @@ class MockValidator(TokenValidatorPort):
             claims={"sub": "user123", "email": "test@example.com", "roles": ["admin"]},
         )
 
-    def decode_unverified(self, token_string: str) -> dict:
+    def decode_unverified(self, token_string: str) -> dict[str, Any]:
         return {}
 
 
-def test_token_service_extracts_user():
+def test_token_service_extracts_user() -> None:
     validator = MockValidator()
     service = TokenService(validator)
 
@@ -31,7 +32,7 @@ def test_token_service_extracts_user():
     assert "admin" in context.user.roles
 
 
-def test_token_service_raises_validation_error():
+def test_token_service_raises_validation_error() -> None:
     validator = Mock()
     validator.validate_token.side_effect = TokenValidationError("Invalid token")
     service = TokenService(validator)
@@ -40,7 +41,7 @@ def test_token_service_raises_validation_error():
         service.validate_and_extract("invalid.token")
 
 
-def test_token_service_missing_sub():
+def test_token_service_missing_sub() -> None:
     validator = Mock()
     validator.validate_token.return_value = Token(
         raw="token", claims={"email": "no_sub@example.com"}
@@ -52,7 +53,7 @@ def test_token_service_missing_sub():
     assert "missing 'sub'" in str(exc.value)
 
 
-def test_token_service_realm_access_roles():
+def test_token_service_realm_access_roles() -> None:
     validator = Mock()
     claims = {
         "sub": "user123",
@@ -67,7 +68,7 @@ def test_token_service_realm_access_roles():
     assert "user" in context.user.roles
 
 
-def test_token_service_extracts_tenant():
+def test_token_service_extracts_tenant() -> None:
     validator = Mock()
     validator.validate_token.return_value = Token(
         raw="token", claims={"sub": "u1", "tid": "tenant_abc"}

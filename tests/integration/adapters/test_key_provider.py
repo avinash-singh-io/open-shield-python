@@ -7,7 +7,7 @@ from open_shield.domain.exceptions import ConfigurationError
 
 
 @respx.mock
-def test_oidc_discovery_and_key_retrieval():
+def test_oidc_discovery_and_key_retrieval() -> None:
     issuer = "https://auth.example.com"
     jwks_uri = f"{issuer}/protocol/openid-connect/certs"
 
@@ -59,7 +59,7 @@ def test_oidc_discovery_and_key_retrieval():
 
 
 @respx.mock
-def test_oidc_discovery_failure():
+def test_oidc_discovery_failure() -> None:
     issuer = "https://auth.example.com"
     respx.get(f"{issuer}/.well-known/openid-configuration").mock(
         return_value=Response(500)

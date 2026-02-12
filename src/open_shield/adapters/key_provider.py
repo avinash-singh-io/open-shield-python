@@ -41,7 +41,7 @@ class OIDCDiscoKeyProvider(KeyProviderPort):
             self._refresh_keys()
         return list(self._keys.values())
 
-    def _refresh_keys(self):
+    def _refresh_keys(self) -> None:
         if not self._jwks_uri:
             self._discover()
 
@@ -69,15 +69,17 @@ class OIDCDiscoKeyProvider(KeyProviderPort):
                     # needed, OR we implement conversion here.
                     # Best practice: KeyProvider returns ready-to-use keys.
                     import jwt.algorithms
+                    from jwt.algorithms import Algorithm
 
                     # Try to get algo from 'alg' field first (e.g. RS256)
                     alg_name = key_data.get("alg")
+                    algo: Algorithm | None = None
                     if alg_name:
                         algo = jwt.algorithms.get_default_algorithms().get(alg_name)
                     else:
                         # Fallback for RSA if alg is missing but kty is RSA
                         if key_data.get("kty") == "RSA":
-                            algo = jwt.algorithms.RSAAlgorithm
+                            algo = jwt.algorithms.RSAAlgorithm  # type: ignore
                         else:
                             algo = None
 
@@ -90,7 +92,7 @@ class OIDCDiscoKeyProvider(KeyProviderPort):
         except Exception as e:
             raise OpenShieldError(f"Failed to refresh JWKS: {e!s}") from e
 
-    def _discover(self):
+    def _discover(self) -> None:
         try:
             disco_url = f"{self.issuer_url}/.well-known/openid-configuration"
             response = self._client.get(disco_url)

@@ -12,7 +12,8 @@ def get_user_context(request: Request) -> UserContext:
     """
     if not hasattr(request.state, "user_context"):
         raise HTTPException(status_code=401, detail="Authentication required")
-    return request.state.user_context
+    from typing import cast
+    return cast(UserContext, request.state.user_context)
 
 
 class RequireScope:
@@ -22,7 +23,7 @@ class RequireScope:
         self.scope = scope
         self.auth_service = AuthorizationService()
 
-    def __call__(self, context: UserContext = Depends(get_user_context)):
+    def __call__(self, context: UserContext = Depends(get_user_context)) -> UserContext:
         try:
             self.auth_service.require_scope(context, self.scope)
         except AuthorizationError as e:
@@ -37,7 +38,7 @@ class RequireRole:
         self.roles = roles
         self.auth_service = AuthorizationService()
 
-    def __call__(self, context: UserContext = Depends(get_user_context)):
+    def __call__(self, context: UserContext = Depends(get_user_context)) -> UserContext:
         try:
             self.auth_service.require_any_role(context, self.roles)
         except AuthorizationError as e:

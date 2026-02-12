@@ -1,3 +1,4 @@
+from typing import Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -11,12 +12,12 @@ from open_shield.domain.exceptions import TokenValidationError
 
 
 @pytest.fixture
-def mock_token_service():
+def mock_token_service() -> MagicMock:
     return MagicMock()
 
 
 @pytest.fixture
-def client(mock_token_service):
+def client(mock_token_service: MagicMock) -> Generator[TestClient, None, None]:
     app = FastAPI()
     config = OpenShieldConfig(ISSUER_URL="https://test.auth", AUDIENCE="test-api")
 
@@ -30,21 +31,21 @@ def client(mock_token_service):
         app.add_middleware(OpenShieldMiddleware, config=config)
 
         @app.get("/public")
-        def public():
+        def public() -> dict[str, str]:
             return {"msg": "public"}
 
         @app.get("/protected")
-        def protected(context: UserContext = Depends(get_user_context)):
+        def protected(context: UserContext = Depends(get_user_context)) -> dict[str, str]:
             return {"user": context.user.id}
 
         @app.get("/scoped")
-        def scoped(context: UserContext = Depends(RequireScope("read:data"))):
+        def scoped(context: UserContext = Depends(RequireScope("read:data"))) -> dict[str, str]:
             return {"status": "ok"}
 
         yield TestClient(app)
 
 
-def test_public_endpoint_no_auth(client, mock_token_service):
+def test_public_endpoint_no_auth(client: TestClient, mock_token_service: MagicMock) -> None:
     # Middleware excludes are default (/docs, etc). /public is NOT excluded by default.
     # So it should be 401 if we enforce strict auth in middleware.
     # Our middleware implementation:
@@ -58,10 +59,10 @@ def test_public_endpoint_no_auth(client, mock_token_service):
     assert "Missing Authorization Header" in response.text
 
 
-def test_protected_endpoint_valid_token(client, mock_token_service):
+def test_protected_endpoint_valid_token(client: TestClient, mock_token_service: MagicMock) -> None:
     # Setup mock
     context = UserContext(
-        user=User(id="user123", scopes=["read:data"]),
+        user=User(id="user123", email="user@example.com", scopes=["read:data"]),
         token=Token(raw="token", claims={}),
         tenant=None,
     )
@@ -76,7 +77,7 @@ def test_protected_endpoint_valid_token(client, mock_token_service):
     # Scheme is "Bearer", token is "valid_token".
 
 
-def test_protected_endpoint_invalid_token(client, mock_token_service):
+def test_protected_endpoint_invalid_token(client: TestClient, mock_token_service: MagicMock) -> None:
     mock_token_service.validate_and_extract.side_effect = TokenValidationError(
         "Invalid"
     )
@@ -87,9 +88,9 @@ def test_protected_endpoint_invalid_token(client, mock_token_service):
     assert "Unauthorized" in response.text
 
 
-def test_require_scope_success(client, mock_token_service):
+def test_require_scope_success(client: TestClient, mock_token_service: MagicMock) -> None:
     context = UserContext(
-        user=User(id="user123", scopes=["read:data"]),
+        user=User(id="user123", email="user@example.com", scopes=["read:data"]),
         token=Token(raw="token", claims={}),
         tenant=None,
     )
@@ -99,9 +100,9 @@ def test_require_scope_success(client, mock_token_service):
     assert response.status_code == 200
 
 
-def test_require_scope_failure(client, mock_token_service):
+def test_require_scope_failure(client: TestClient, mock_token_service: MagicMock) -> None:
     context = UserContext(
-        user=User(id="user123", scopes=["other:scope"]),
+        user=User(id="user123", email="user@example.com", scopes=["other:scope"]),
         token=Token(raw="token", claims={}),
         tenant=None,
     )

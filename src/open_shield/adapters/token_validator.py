@@ -18,7 +18,13 @@ class PyJWTValidator(TokenValidatorPort):
     Adapter that uses PyJWT to validate tokens.
     """
 
-    def __init__(self, key_provider=None, algorithms=None, audience=None, issuer=None):
+    def __init__(
+        self,
+        key_provider: Any | None = None,
+        algorithms: list[str] | None = None,
+        audience: str | None = None,
+        issuer: str | None = None,
+    ) -> None:
         self.key_provider = key_provider
         self.algorithms = algorithms or ["RS256"]
         self.audience = audience
@@ -38,7 +44,7 @@ class PyJWTValidator(TokenValidatorPort):
             # options={"verify_signature": True} is default
             payload = jwt.decode(
                 token_string,
-                key=key,
+                key=key,  # type: ignore
                 algorithms=self.algorithms,
                 audience=self.audience,
                 issuer=self.issuer,

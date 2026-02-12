@@ -1,25 +1,25 @@
 # Tasks
 
-- [ ] Phase 0: Initialization <!-- id: 0 -->
-    - [ ] Set up project structure (`src/open_shield/domain`, `adapters`, `api`) <!-- id: 1 -->
-    - [ ] Initialize `uv` project and `pyproject.toml` <!-- id: 2 -->
-    - [ ] Configure `ruff` and `mypy` <!-- id: 3 -->
-    - [ ] Set up GitHub Actions (CI) <!-- id: 4 -->
-- [ ] Phase 1: Domain Logic (Core) <!-- id: 5 -->
-    - [ ] Define Entities (`User`, `Token`, `Context`) <!-- id: 6 -->
-    - [ ] Define Ports (`KeyProviderPort`, `TokenValidatorPort`) <!-- id: 7 -->
-    - [ ] Implement `TokenService` (Orchestrator) <!-- id: 8 -->
-    - [ ] Define Domain Exceptions <!-- id: 9 -->
-- [ ] Phase 2: Infrastructure Adapters <!-- id: 10 -->
-    - [ ] Implement `PyJWTValidator` (Adapter) <!-- id: 11 -->
-    - [ ] Implement `OIDCDiscoKeyProvider` (Adapter) <!-- id: 12 -->
-    - [ ] Implement Pydantic Configuration Loader <!-- id: 13 -->
-    - [ ] Implement API Key Hashing Adapter <!-- id: 14 -->
-- [ ] Phase 3: Framework Integration (API) <!-- id: 15 -->
-    - [ ] Create FastAPI Middleware (depends on `TokenService`) <!-- id: 16 -->
-    - [ ] Implement FastAPI Dependencies (`DependencyInjection`) <!-- id: 17 -->
-    - [ ] Map Domain Exceptions to HTTP Responses <!-- id: 18 -->
-- [ ] Phase 4: Polish & Release <!-- id: 19 -->
-    - [ ] Comprehensive Testing (Unit/Integration) <!-- id: 21 -->
-    - [ ] Documentation (Usage, Architecture) <!-- id: 20 -->
-    - [ ] Publish to PyPI <!-- id: 22 -->
+- [x] Phase 0: Initialization <!-- id: 0 -->
+    - [x] Set up project structure (`src/open_shield/domain`, `adapters`, `api`) <!-- id: 1 -->
+    - [x] Initialize `uv` project and `pyproject.toml` <!-- id: 2 -->
+    - [x] Configure `ruff` and `mypy` <!-- id: 3 -->
+    - [x] Set up GitHub Actions (CI) <!-- id: 4 -->
+- [x] Phase 1: Domain Logic (Core) <!-- id: 5 -->
+    - [x] Define Entities (`User`, `Token`, `Context`) <!-- id: 6 -->
+    - [x] Define Ports (`KeyProviderPort`, `TokenValidatorPort`) <!-- id: 7 -->
+    - [x] Implement `TokenService` (Orchestrator) <!-- id: 8 -->
+    - [x] Define Domain Exceptions <!-- id: 9 -->
+- [x] Phase 2: Infrastructure Adapters <!-- id: 10 -->
+    - [x] Implement `PyJWTValidator` (Adapter) <!-- id: 11 -->
+    - [x] Implement `OIDCDiscoKeyProvider` (Adapter) <!-- id: 12 -->
+    - [x] Implement Pydantic Configuration Loader <!-- id: 13 -->
+    - [x] Implement API Key Hashing Adapter <!-- id: 14 -->
+- [x] Phase 3: Framework Integration (API) <!-- id: 15 -->
+    - [x] Create FastAPI Middleware (depends on `TokenService`) <!-- id: 16 -->
+    - [x] Implement FastAPI Dependencies (`DependencyInjection`) <!-- id: 17 -->
+    - [x] Map Domain Exceptions to HTTP Responses <!-- id: 18 -->
+- [x] Phase 4: Polish & Release <!-- id: 19 -->
+    - [x] Comprehensive Testing (Unit/Integration) <!-- id: 21 -->
+    - [x] Documentation (Usage, Architecture) <!-- id: 20 -->
+    - [x] Publish to PyPI <!-- id: 22 -->

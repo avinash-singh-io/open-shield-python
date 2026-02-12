@@ -39,5 +39,6 @@ class AuthorizationService:
 
         if not user_roles.intersection(required_roles):
             raise AuthorizationError(
-                f"Missing required role. User has: {user_roles}. Required one of: {required_roles}"
+                f"Missing required role. User has: {user_roles}. "
+                f"Required one of: {required_roles}"
             )

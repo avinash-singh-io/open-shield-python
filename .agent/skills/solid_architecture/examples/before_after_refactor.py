@@ -232,7 +232,7 @@ def test_save_and_notify_rejects_empty_name() -> None:
 
     try:
         service.save_and_notify("", "alice@example.com")
-        assert False, "Should have raised ValueError"
+        raise AssertionError("Should have raised ValueError")
     except ValueError:
         pass  # Expected
 

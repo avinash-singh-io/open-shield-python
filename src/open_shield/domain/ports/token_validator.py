@@ -26,7 +26,8 @@ class TokenValidatorPort(ABC):
     @abstractmethod
     def decode_unverified(self, token_string: str) -> dict[str, Any]:
         """
-        Decode the token without verification (useful for inspecting headers/claims pre-validation).
+        Decode the token without verification (useful for inspecting headers/claims
+        pre-validation).
 
         Args:
             token_string: The raw JWT string.

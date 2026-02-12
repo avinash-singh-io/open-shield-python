@@ -44,8 +44,8 @@ class PyJWTValidator(TokenValidatorPort):
                 issuer=self.issuer,
                 options={
                     "verify_exp": True,
-                    "verify_aud": True if self.audience else False,
-                    "verify_iss": True if self.issuer else False,
+                    "verify_aud": bool(self.audience),
+                    "verify_iss": bool(self.issuer),
                 },
             )
 

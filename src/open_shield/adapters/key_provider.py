@@ -55,16 +55,18 @@ class OIDCDiscoKeyProvider(KeyProviderPort):
                 kid = key_data.get("kid")
                 if kid:
                     # Convert JWK to PEM/Public Key object using PyJWT helpers
-                    # Optimization: In real world, use jwt.algorithms.RSAAlgorithm.from_jwk
-                    # Here we store raw JWK or converted object depending on what validator expects
-                    # For PyJWT, passing the JWK dict or a key object often works, but let's be explicit
-                    # We will use PyJWT's internal helpers if available or just return the dict
-                    # as PyJWT decode() accepts a JWK dict set or specific key.
+                    # Optimization: In real world, use
+                    # jwt.algorithms.RSAAlgorithm.from_jwk
+                    # Here we store raw JWK or converted object depending on what validator
+                    # expects. For PyJWT, passing the JWK dict or a key object often works,
+                    # but let's be explicit.
+                    # We will use PyJWT's internal helpers if available or just return
+                    # the dict as PyJWT decode() accepts a JWK dict set or specific key.
                     # Ideally we convert distinct key per algorithm.
 
                     # For simplicity in this phase, we'll store the JWK dict.
-                    # The Validator adapter will need to handle the conversion if needed,
-                    # OR we implement conversion here.
+                    # The Validator adapter will need to handle the conversion if
+                    # needed, OR we implement conversion here.
                     # Best practice: KeyProvider returns ready-to-use keys.
                     import jwt.algorithms
 

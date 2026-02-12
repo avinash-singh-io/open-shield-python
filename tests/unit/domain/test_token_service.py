@@ -33,3 +33,38 @@ def test_token_service_raises_validation_error():
     
     with pytest.raises(TokenValidationError):
         service.validate_and_extract("invalid.token")
+
+
+def test_token_service_missing_sub():
+    validator = Mock()
+    validator.validate_token.return_value = Token(raw="token", claims={"email": "no_sub@example.com"})
+    service = TokenService(validator)
+    
+    with pytest.raises(TokenValidationError) as exc:
+        service.validate_and_extract("token")
+    assert "missing 'sub'" in str(exc.value)
+
+
+def test_token_service_realm_access_roles():
+    validator = Mock()
+    claims = {
+        "sub": "user123",
+        "realm_access": {"roles": ["superuser"]},
+        "roles": ["user"]
+    }
+    validator.validate_token.return_value = Token(raw="token", claims=claims)
+    service = TokenService(validator)
+    
+    context = service.validate_and_extract("token")
+    assert "superuser" in context.user.roles
+    assert "user" in context.user.roles
+
+
+def test_token_service_extracts_tenant():
+    validator = Mock()
+    validator.validate_token.return_value = Token(raw="token", claims={"sub": "u1", "tid": "tenant_abc"})
+    service = TokenService(validator)
+    
+    context = service.validate_and_extract("token")
+    assert context.tenant is not None
+    assert context.tenant.tenant_id == "tenant_abc"

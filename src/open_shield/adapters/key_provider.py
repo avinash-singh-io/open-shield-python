@@ -65,7 +65,17 @@ class OIDCDiscoKeyProvider(KeyProviderPort):
                     # OR we implement conversion here.
                     # Best practice: KeyProvider returns ready-to-use keys.
                     import jwt.algorithms
-                    algo = jwt.algorithms.get_default_algorithms().get(key_data.get("kty", "RSA"))
+                    # Try to get algo from 'alg' field first (e.g. RS256)
+                    alg_name = key_data.get("alg")
+                    if alg_name:
+                         algo = jwt.algorithms.get_default_algorithms().get(alg_name)
+                    else:
+                         # Fallback for RSA if alg is missing but kty is RSA
+                         if key_data.get("kty") == "RSA":
+                             algo = jwt.algorithms.RSAAlgorithm
+                         else:
+                             algo = None
+
                     if algo:
                         public_key = algo.from_jwk(key_data)
                         new_keys[kid] = public_key

@@ -1,25 +1,37 @@
-# open-shield-python
+# Open Shield Python SDK
 
-open-shield-python is a vendor-agnostic authentication and authorization SDK for Python services.
+[![CI](https://github.com/prayog-ai-labs/open-shield-python/actions/workflows/ci.yml/badge.svg)](https://github.com/prayog-ai-labs/open-shield-python/actions/workflows/ci.yml)
 
-It provides a unified security layer for modern microservices, supporting:
+Vendor-agnostic authentication and authorization enforcement SDK for Python.
 
-- OpenID Connect (OIDC)
-- OAuth2
-- JWT validation
-- Scope and role enforcement
-- Multi-tenant context handling
-- Framework integrations (FastAPI, Flask, Django)
+## Features
 
-open-shield-python allows services to integrate with any standards-compliant identity provider
-such as Logto, Keycloak, Auth0, Azure AD, or custom OIDC systems — without vendor lock-in.
+- **Vendor Neutral**: Works with Auth0, Keycloak, or any OIDC compliant provider.
+- **Framework Agnostic**: Core logic is pure Python; adapters provided for FastAPI.
+- **Clean Architecture**: Domain logic is isolated from infrastructure concerns.
+- **Type Safe**: Fully typed and checked with `mypy`.
 
-The SDK focuses on:
+## Installation
 
-- Secure token verification
-- Config-driven identity provider support
-- Clean middleware integration
-- Consistent access enforcement across services
-- Separation of identity management and service logic
+```bash
+pip install open-shield-python
+```
 
-It is designed for SaaS platforms, self-hosted deployments, and distributed systems.
+## Usage
+
+(Coming Soon)
+
+## Development
+
+This project uses `uv` for dependency management.
+
+```bash
+# Install dependencies
+uv sync
+
+# Run tests
+uv run pytest
+
+# Lint
+uv run ruff check .
+```

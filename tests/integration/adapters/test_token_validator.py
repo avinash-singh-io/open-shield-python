@@ -2,7 +2,8 @@ from datetime import UTC, datetime, timedelta
 
 import jwt
 import pytest
-from cryptography.hazmat.primitives import serialization
+
+# from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 from open_shield.adapters.token_validator import PyJWTValidator
@@ -17,13 +18,14 @@ def rsa_keys():
     )
     public_key = private_key.public_key()
 
-    private_pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption(),
-    )
+    # private_pem = private_key.private_bytes(
+    #     encoding=serialization.Encoding.PEM,
+    #     format=serialization.PrivateFormat.PKCS8,
+    #     encryption_algorithm=serialization.NoEncryption(),
+    # )
 
-    # public_pem not used in this test, but generation logic kept for reference/completeness if needed
+    # public_pem not used in this test, but generation logic kept for
+    # reference/completeness if needed
     # public_pem = public_key.public_bytes(...)
 
     return private_key, public_key

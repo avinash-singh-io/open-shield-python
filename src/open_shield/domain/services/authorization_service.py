@@ -20,7 +20,8 @@ class AuthorizationService:
         """
         if required_scope not in context.user.scopes:
             # Check for exact match first.
-            # TODO: Implement hierarchical scope checking (e.g. read:users implies read:users:self) if needed.
+            # TODO: Implement hierarchical scope checking (e.g. read:users implies
+            # read:users:self) if needed.
             raise AuthorizationError(f"Missing required scope: {required_scope}")
 
     def require_any_role(self, context: UserContext, roles: list[str]) -> None:

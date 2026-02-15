@@ -4,13 +4,17 @@ from starlette.types import ASGIApp
 
 from open_shield.adapters import OIDCDiscoKeyProvider, OpenShieldConfig, PyJWTValidator
 from open_shield.domain.exceptions import OpenShieldError, TokenValidationError
+from open_shield.domain.ports import TenantResolverPort
 from open_shield.domain.services import TokenService
+from open_shield.domain.services.claim_mapping import ClaimMapping
 
 
 class OpenShieldMiddleware(BaseHTTPMiddleware):
-    """
-    Middleware that intercepts requests, validates the Authorization header,
+    """Middleware that intercepts requests, validates the Authorization header,
     and attaches the UserContext to the request state.
+
+    Supports configurable claim mapping via OpenShieldConfig, making it
+    compatible with any OIDC-compliant provider (Logto, Keycloak, Auth0, etc.).
 
     Attributes:
         app: The ASGI application.
@@ -24,6 +28,7 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
         app: ASGIApp,
         config: OpenShieldConfig,
         exclude_paths: set[str] | None = None,
+        tenant_resolver: TenantResolverPort | None = None,
     ):
         super().__init__(app)
         self.config = config
@@ -34,9 +39,17 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
             "/health",
         }
 
-        # Initialize dependencies
-        # In a real app, these might be injected, but middleware initialization is often
-        # the composition root.
+        # Build claim mapping from config
+        claim_mapping = ClaimMapping(
+            user_id_claim=config.USER_ID_CLAIM,
+            email_claim=config.EMAIL_CLAIM,
+            tenant_id_claim=config.TENANT_ID_CLAIM,
+            scope_claim=config.SCOPE_CLAIM,
+            roles_claim=config.ROLES_CLAIM,
+            tenant_fallback=config.TENANT_FALLBACK,
+        )
+
+        # Initialize dependencies (composition root)
         key_provider = OIDCDiscoKeyProvider(issuer_url=config.ISSUER_URL)
         validator = PyJWTValidator(
             key_provider=key_provider,
@@ -44,7 +57,11 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
             audience=config.AUDIENCE,
             issuer=config.ISSUER_URL,
         )
-        self.token_service = TokenService(validator=validator)
+        self.token_service = TokenService(
+            validator=validator,
+            claim_mapping=claim_mapping,
+            tenant_resolver=tenant_resolver,
+        )
 
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
@@ -54,9 +71,6 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
 
         auth_header = request.headers.get("Authorization")
         if not auth_header:
-            # Basic check, detailed handling usually done by dependency or explicit 401
-            # If we want global enforcement, strictly 401 here.
-            # Return 401.
             return Response("Missing Authorization Header", status_code=401)
 
         try:
@@ -69,15 +83,11 @@ class OpenShieldMiddleware(BaseHTTPMiddleware):
             # Attach to request.state for downstream access
             request.state.user_context = user_context
 
-            # Enforce global require_scopes/roles if configured?
-            # Usually better handled in route dependencies.
-
         except (ValueError, TokenValidationError) as e:
             return Response(f"Unauthorized: {e!s}", status_code=401)
         except OpenShieldError as e:
             return Response(f"Forbidden: {e!s}", status_code=403)
         except Exception:
-            # Log this error
             return Response(
                 "Internal Server Error during Authentication", status_code=500
             )

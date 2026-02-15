@@ -1,3 +1,5 @@
+from typing import cast
+
 from fastapi import Depends, HTTPException, Request
 
 from open_shield.domain.entities import UserContext
@@ -6,13 +8,27 @@ from open_shield.domain.services import AuthorizationService
 
 
 def get_user_context(request: Request) -> UserContext:
-    """
-    Dependency to retrieve the UserContext from request.state.
-    Assumes OpenShieldMiddleware has run.
+    """Dependency to retrieve the UserContext from request.state.
+
+    Assumes OpenShieldMiddleware has run and attached user_context.
+
+    Raises:
+        HTTPException: 401 if no user context is found.
     """
     if not hasattr(request.state, "user_context"):
         raise HTTPException(status_code=401, detail="Authentication required")
-    from typing import cast
+
+    return cast(UserContext, request.state.user_context)
+
+
+def get_optional_user_context(request: Request) -> UserContext | None:
+    """Dependency for optional authentication.
+
+    Returns None instead of 401 when no credentials are provided.
+    Useful for routes that support both authenticated and anonymous access.
+    """
+    if not hasattr(request.state, "user_context"):
+        return None
 
     return cast(UserContext, request.state.user_context)
 

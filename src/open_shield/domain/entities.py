@@ -27,6 +27,10 @@ class User(Entity):
     scopes: list[str] = Field(
         default_factory=list, description="Granted scopes/permissions"
     )
+    actor_type: str = Field(
+        default="user",
+        description="Inferred actor type: 'user', 'agent', or 'service'",
+    )
     metadata: dict[str, Any] = Field(
         default_factory=dict, description="Additional user attributes"
     )

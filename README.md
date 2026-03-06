@@ -240,7 +240,7 @@ ctx.user.actor_type  # "user" | "service" | "agent"
 
 Open Shield sits as a **thin, powerful layer** between your identity provider and your Python backend — handling all the complexity of token validation, claim extraction, tenant resolution, and authorization enforcement so you don't have to.
 
-![How Open Shield Works](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/architecture.png)
+![How Open Shield Works](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/images/architecture.png)
 
 ### How It Works
 
@@ -252,6 +252,10 @@ Open Shield sits as a **thin, powerful layer** between your identity provider an
    - **Detects actor type** — classifies the caller as `user`, `service`, or `agent`.
    - **Enforces authorization** — checks scopes and roles before the request reaches your handler.
 3. **Your Python service** receives a clean, verified `UserContext` object — ready to use. No JWT parsing, no OIDC plumbing, no provider-specific code.
+
+### Request Authentication Flow
+
+![Request Authentication Flow](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/images/sequence-flow.png)
 
 ### Why This Matters
 

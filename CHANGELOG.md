@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 - **Documentation**: Completely overhauled the Architecture section in README with visual diagrams and detailed explanations.
 - **Images**: Organized documentation images into `docs/images/` directory.
 
+### Project Maintenance
+- **Git Identity Cleaned**: Rewrote entire repository history to unify all commits under the `avinash-singh-io` identity with a verified email.
+- **Collaborator Cleanup**: Pruned legacy collaborator access and stale remote tracking branches.
+- **Release Synchronization**: Synchronized GitHub tags and releases with the new clean history.
+
+
 ## [v0.2.0] - 2026-02-16
 
 ### Added

@@ -11,7 +11,7 @@ Thank you for your interest in contributing to Open Shield! We welcome contribut
 
 2. **Clone the repository**:
    ```bash
-   git clone https://github.com/prayog-ai-labs/open-shield-python.git
+   git clone https://github.com/avinash-singh-io/open-shield-python.git
    cd open-shield-python
    ```
 

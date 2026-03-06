@@ -1,6 +1,6 @@
 # Open Shield Python SDK
 
-[![CI](https://github.com/prayog-ai-labs/open-shield-python/actions/workflows/ci.yml/badge.svg)](https://github.com/prayog-ai-labs/open-shield-python/actions/workflows/ci.yml)
+[![CI](https://github.com/avinash-singh-io/open-shield-python/actions/workflows/ci.yml/badge.svg)](https://github.com/avinash-singh-io/open-shield-python/actions/workflows/ci.yml)
 
 Vendor-agnostic authentication and authorization enforcement SDK for Python.
 

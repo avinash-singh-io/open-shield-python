@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.2.7] - 2026-03-06
+
+### Changed
+- **Documentation**: Restructured README to prioritize architecture diagrams for better impact on PyPI and GitHub.
+
 ## [v0.2.6] - 2026-03-06
 
 ### Added

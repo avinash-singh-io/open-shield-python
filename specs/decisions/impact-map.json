@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "description": "Maps topic keywords to specific non-phase docs/sections. Used by /sync-docs to find affected docs.",
+  "topics": {
+    "clean-architecture": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Architecture"},
+        {"path": "specs/vision/principles.md", "section": "Engineering Principles"}
+      ]
+    },
+    "token-validation": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Token Validation"},
+        {"path": "specs/vision/project-charter.md", "section": "Goals"}
+      ]
+    },
+    "authorization": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Authorization"},
+        {"path": "specs/vision/project-charter.md", "section": "Goals"}
+      ]
+    },
+    "multi-tenancy": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Multi-Tenancy"}
+      ]
+    },
+    "framework-adapters": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Framework Integration"},
+        {"path": "specs/roadmap/roadmap.md", "section": "Timeline"}
+      ]
+    },
+    "configuration": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "Configuration"}
+      ]
+    },
+    "oidc": {
+      "files": [
+        {"path": "docs/open-shield-python.md", "section": "OIDC Discovery"}
+      ]
+    },
+    "testing": {
+      "files": [
+        {"path": "specs/vision/success-criteria.md", "section": "Quality Criteria"}
+      ]
+    },
+    "pypi": {
+      "files": [
+        {"path": "specs/roadmap/roadmap.md", "section": "Milestones"}
+      ]
+    }
+  }
+}

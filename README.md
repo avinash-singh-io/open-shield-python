@@ -6,6 +6,39 @@ Vendor-agnostic authentication and authorization enforcement SDK for Python.
 
 Open Shield lets you enforce authentication (AuthN) and authorization (AuthZ) in your Python applications without coupling to a specific identity provider. Works with **Logto**, **Keycloak**, **Auth0**, **Entra ID**, **Cognito**, or any OIDC-compliant provider.
 
+---
+
+## Architecture
+
+Open Shield sits as a **thin, powerful layer** between your identity provider and your Python backend — handling all the complexity of token validation, claim extraction, tenant resolution, and authorization enforcement so you don't have to.
+
+![How Open Shield Works](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/images/architecture.png)
+
+### How It Works
+
+1. **Any OIDC Identity Provider** (Logto, Auth0, Keycloak, Azure Entra ID, AWS Cognito, or your own) issues a JWT token when a user or service authenticates.
+2. **Open Shield SDK** intercepts the incoming request in your Python application and:
+   - **Validates the token** — verifies the signature using auto-fetched JWKS keys from the provider's OIDC discovery endpoint.
+   - **Maps claims** — extracts user ID, email, tenant, scopes, and roles from the JWT using your configurable claim mapping (every provider names claims differently — Open Shield normalizes them).
+   - **Resolves the tenant** — determines tenant isolation using the 3-step cascade (M2M lookup → org claim → sub fallback).
+   - **Detects actor type** — classifies the caller as `user`, `service`, or `agent`.
+   - **Enforces authorization** — checks scopes and roles before the request reaches your handler.
+3. **Your Python service** receives a clean, verified `UserContext` object — ready to use. No JWT parsing, no OIDC plumbing, no provider-specific code.
+
+### Request Authentication Flow
+
+![Request Authentication Flow](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/images/sequence-flow.png)
+
+### Why This Matters
+
+- **Works with any OIDC provider** — Switch from Auth0 to Keycloak? Change two environment variables. Zero code changes.
+- **Works with any Python framework** — First-class FastAPI support today, with Django and Flask coming soon. The core logic is pure Python with no framework dependency.
+- **Built on Clean Architecture** — The domain layer has zero external dependencies. All I/O (JWT decoding, OIDC discovery) happens through abstract ports implemented by swappable adapters.
+- **Easy to test** — Mock the `TokenValidatorPort` for fast unit tests without any HTTP calls.
+- **Easy to extend** — Implement `TenantResolverPort` to wire in your own database for M2M tenant lookups.
+
+---
+
 ## Features
 
 - **Vendor Neutral** — Works with any OIDC-compliant identity provider
@@ -16,6 +49,8 @@ Open Shield lets you enforce authentication (AuthN) and authorization (AuthZ) in
 - **Clean Architecture** — Domain ↔ Adapters ↔ API layers with strict dependency inversion
 - **Type Safe** — Fully typed, checked with `mypy`
 - **Automatic JWKS Rotation** — Fetches and caches keys from OIDC discovery
+
+---
 
 ## Installation
 
@@ -233,33 +268,6 @@ Open Shield automatically classifies the caller:
 ```python
 ctx.user.actor_type  # "user" | "service" | "agent"
 ```
-
----
-
-## Architecture
-
-Open Shield sits as a **thin, powerful layer** between your identity provider and your Python backend — handling all the complexity of token validation, claim extraction, tenant resolution, and authorization enforcement so you don't have to.
-
-![How Open Shield Works](https://raw.githubusercontent.com/avinash-singh-io/open-shield-python/main/docs/architecture.png)
-
-### How It Works
-
-1. **Any OIDC Identity Provider** (Logto, Auth0, Keycloak, Azure Entra ID, AWS Cognito, or your own) issues a JWT token when a user or service authenticates.
-2. **Open Shield SDK** intercepts the incoming request in your Python application and:
-   - **Validates the token** — verifies the signature using auto-fetched JWKS keys from the provider's OIDC discovery endpoint.
-   - **Maps claims** — extracts user ID, email, tenant, scopes, and roles from the JWT using your configurable claim mapping (every provider names claims differently — Open Shield normalizes them).
-   - **Resolves the tenant** — determines tenant isolation using the 3-step cascade (M2M lookup → org claim → sub fallback).
-   - **Detects actor type** — classifies the caller as `user`, `service`, or `agent`.
-   - **Enforces authorization** — checks scopes and roles before the request reaches your handler.
-3. **Your Python service** receives a clean, verified `UserContext` object — ready to use. No JWT parsing, no OIDC plumbing, no provider-specific code.
-
-### Why This Matters
-
-- **Works with any OIDC provider** — Switch from Auth0 to Keycloak? Change two environment variables. Zero code changes.
-- **Works with any Python framework** — First-class FastAPI support today, with Django and Flask coming soon. The core logic is pure Python with no framework dependency.
-- **Built on Clean Architecture** — The domain layer has zero external dependencies. All I/O (JWT decoding, OIDC discovery) happens through abstract ports implemented by swappable adapters.
-- **Easy to test** — Mock the `TokenValidatorPort` for fast unit tests without any HTTP calls.
-- **Easy to extend** — Implement `TenantResolverPort` to wire in your own database for M2M tenant lookups.
 
 ---
 

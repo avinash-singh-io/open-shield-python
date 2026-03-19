@@ -1,7 +1,0 @@
-# Technical Debt
-
-## Codebase
-- [ ] ...
-
-## Documentation
-- [ ] ...

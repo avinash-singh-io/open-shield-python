@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "generated": "2026-03-20",
+  "description": "Maps each phase to topic keywords. Used by /sync-docs to find affected phases.",
+  "phases": {
+    "phase-0-init": {
+      "status": "complete",
+      "topics": ["project-structure", "uv", "ruff", "mypy", "ci-cd", "github-actions", "clean-architecture"]
+    },
+    "phase-1-core": {
+      "status": "complete",
+      "topics": ["domain", "entities", "ports", "services", "token-service", "authorization-service", "exceptions"]
+    },
+    "phase-2-adapters": {
+      "status": "complete",
+      "topics": ["adapters", "pyjwt", "oidc", "jwks", "httpx", "pydantic-settings", "api-key", "configuration"]
+    },
+    "phase-3-integration": {
+      "status": "complete",
+      "topics": ["fastapi", "middleware", "dependency-injection", "exception-handlers", "http-responses"]
+    },
+    "phase-4-release": {
+      "status": "complete",
+      "topics": ["testing", "documentation", "pypi", "coverage", "publishing"]
+    },
+    "phase-5-flask-django": {
+      "status": "not-started",
+      "topics": ["flask", "django", "framework-adapters", "wsgi"]
+    },
+    "phase-6-advanced-authz": {
+      "status": "not-started",
+      "topics": ["opa", "policy-engine", "abac", "authorization"]
+    },
+    "phase-7-performance": {
+      "status": "not-started",
+      "topics": ["cython", "performance", "optimization"]
+    }
+  }
+}
